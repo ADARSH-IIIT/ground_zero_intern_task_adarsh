@@ -33,6 +33,12 @@ function findExpertsByCategory(categories) {
   return unique.slice(0, 5);
 }
 
+
+
+
+
+
+
 // ✅ Main function — unique chat each time
 export async function getMappingResponse(topic) {
   // Step 1: Ask Gemini to find most relevant mapping keys
@@ -41,7 +47,7 @@ You are an assistant that knows this fixed mapping of keywords:
 ${JSON.stringify(mapping, null, 2)}
 
 When I give a topic, return up to 5 most relevant keys and their values 
-in JSON format like {"career growth": 0.9, "motivation": 0.85}
+in JSON format like {"career growth": 1 , "motivation": 2 }
 
 Topic: "${topic}"
 `;
@@ -53,7 +59,7 @@ Topic: "${topic}"
 
   let text = response?.candidates?.[0]?.content?.parts?.[0]?.text || "";
   text = text.replace(/```json|```/g, "").trim();
-
+  // console.log("Mapping response text:", text);
   let categories = {};
   try {
     categories = JSON.parse(text);
@@ -63,6 +69,7 @@ Topic: "${topic}"
 
   // Step 2: Match experts
   const matchedExperts = findExpertsByCategory(categories);
+  console.log(matchedExperts)
 
   if (matchedExperts.length === 0) {
     return { experts: [] };
